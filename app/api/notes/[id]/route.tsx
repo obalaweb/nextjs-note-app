@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { notFound } from 'next/navigation';
-import schema from '../../users/schema';
+import schema from '../../notes/schema';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
@@ -13,8 +13,8 @@ export async function GET(
   const note = await prisma.note.findUnique({
     where: { id },
   });
-  if (!note) notFound();
-  console.log(note);
+  if (!note)
+    return NextResponse.json({ error: 'Note not found' }, { status: 404 });
   return NextResponse.json(note);
 }
 
@@ -22,20 +22,30 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: { id: number } },
 ) {
-  const body = await request.json(body);
+  const body = await request.json();
   const validation = schema.safeParse(body);
 
   if (!validation.success)
     return NextResponse.json(validation.error.errors, { status: 400 });
-  return NextResponse.json({ id: 1, name: body });
+  const id = Number(params.id);
+  const note = await prisma.note.findUnique({
+    where: { id },
+  });
+
+  return NextResponse.json(note);
 }
 
-export function DELETE(
+export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: number } },
 ) {
-  if (params.id > 5)
-    return NextResponse.json({ error: 'User not found' }, { status: 404 });
+  const id = Number(params.id);
+  const note = await prisma.note.findUnique({
+    where: { id },
+  });
 
-  return NextResponse.json({ id: 1, name: body.name });
+  if (!note)
+    return NextResponse.json({ error: 'Note not found' }, { code: 404 });
+
+  return NextResponse.json(note);
 }
