@@ -26,24 +26,31 @@ export async function PUT(
   if (!validation.success)
     return NextResponse.json(validation.error.errors, { status: 400 });
   const id = Number(params.id);
-  const user = await prisma.user.findUnique({
+  const user = await prisma.user.update({
     where: { id },
+    data: {
+      name: body.name,
+      email: body.email,
+    },
   });
 
-  return NextResponse.json(user);
+  return NextResponse.json(user, { status: 200 });
 }
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: number } },
+  { params }: { params: { id: string } },
 ) {
-  const id = Number(params.id);
-  const user = await prisma.user.findUnique({
+  const id = parseInt(params.id);
+  const user = await prisma.user.delete({
     where: { id },
   });
 
   if (!user)
     return NextResponse.json({ error: 'User not found' }, { code: 404 });
 
-  return NextResponse.json(user);
+  return NextResponse.json(
+    { success: true, message: 'User deleted successfully' },
+    { status: 200 },
+  );
 }

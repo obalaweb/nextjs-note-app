@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
+import schema from '../users/schema';
 
 const prisma = new PrismaClient();
 // export async function GET(request: NextRequest) {
@@ -23,4 +24,16 @@ export async function GET(request: NextRequest) {
 }
 export async function POST(request: NextRequest) {
   const body = await request.json();
+
+  const validation = schema.safeParse(body);
+
+  if (!validation.success)
+    return NextResponse.json({ error: 'Error creating user' }, { code: 400 });
+  const user = await prisma.user.create({
+    data: {
+      name: body.name,
+      email: body.email,
+    },
+  });
+  return NextResponse.json({ success: true, data: user }, { status: 201 });
 }
