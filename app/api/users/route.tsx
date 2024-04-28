@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
   const validation = schema.safeParse(body);
 
   if (!validation.success)
-    return NextResponse.json({ error: 'Error creating user' }, { code: 400 });
+    return NextResponse.json({ error: 'Error creating user' }, { status: 400 });
   const user = await prisma.user.create({
     data: {
       name: body.name,

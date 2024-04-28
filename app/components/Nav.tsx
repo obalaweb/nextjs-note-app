@@ -23,7 +23,12 @@ export default function Nav() {
         <div className="flex-none">
           <ul className="menu menu-horizontal px-1">
             <li>
-              <NewNote />
+              <Link
+                href="/notes/new"
+                className="bg-primary text-gray-900 hover:text-white hover:outline hover:outline-primary"
+              >
+                Add Note
+              </Link>
             </li>
             <li>
               <Link

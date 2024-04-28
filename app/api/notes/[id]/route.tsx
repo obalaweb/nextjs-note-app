@@ -15,7 +15,7 @@ export async function GET(
   });
   if (!note)
     return NextResponse.json({ error: 'Note not found' }, { status: 404 });
-  return NextResponse.json(note);
+  return NextResponse.json({ success: true, data: note }, { status: 200 });
 }
 
 export async function PUT(
@@ -44,13 +44,20 @@ export async function DELETE(
   { params }: { params: { id: string } },
 ) {
   const id = parseInt(params.id);
-  const note = await prisma.note.delete({
+
+  const note = await prisma.note.findUnique({
     where: { id },
   });
 
   if (!note)
-    return NextResponse.json({ error: 'Note not found' }, { code: 404 });
+    return NextResponse.json({ error: 'Note not found' }, { status: 404 });
 
+  const deletedNote = await prisma.note.delete({
+    where: { id },
+  });
+
+  if (!deletedNote)
+    return NextResponse.json({ error: 'Note not found' }, { status: 404 });
   return NextResponse.json(
     { success: true, message: 'Note deleted successfully' },
     { status: 200 },

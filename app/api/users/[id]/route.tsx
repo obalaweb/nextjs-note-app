@@ -47,7 +47,7 @@ export async function DELETE(
   });
 
   if (!user)
-    return NextResponse.json({ error: 'User not found' }, { code: 404 });
+    return NextResponse.json({ error: 'User not found' }, { status: 404 });
 
   return NextResponse.json(
     { success: true, message: 'User deleted successfully' },

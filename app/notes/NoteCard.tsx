@@ -8,18 +8,15 @@ interface Note {
 }
 
 const NoteCard = async () => {
-  // const res = await fetch('http://localhost:5000/notes', {
-  //   cache: 'no-store',
-  // });
   const res = await fetch('http:localhost:3000/api/notes', {
     cache: 'no-store',
   });
-  console.log(res);
-  const notes: Note[] = await res.json();
+  const data = await res.json();
+  const notes = data.data;
 
   return (
     <div className="flex flex-wrap justify-center gap-5">
-      {notes.map((note) => (
+      {notes.map((note: Note) => (
         <Link key={note.id} href={'/notes/' + note.id}>
           <Card key={note.id} note={note} />
         </Link>

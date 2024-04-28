@@ -1,17 +1,12 @@
-import type { Metadata } from "next";
-// import { Inter } from "next/font/google";
-import Nav from "./components/Nav";
-import Footer from "./components/Footer";
-import Note from "./components/Note";
-import "./globals.css";
-
-// const inter = Inter({ subsets: ["latin"] });
-
-export const fetchCache = "default-no-store";
+import type { Metadata } from 'next';
+import Nav from './components/Nav';
+import Footer from './Footer';
+import Note from './components/Note';
+import './globals.css';
 
 export const metadata: Metadata = {
-  title: "Note",
-  description: "Next note taking app",
+  title: 'Note',
+  description: 'Next note taking app',
 };
 
 export default function RootLayout({
@@ -21,7 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
+      <body className="flex min-h-screen flex-col">
         <Nav />
         <Note />
         {children}

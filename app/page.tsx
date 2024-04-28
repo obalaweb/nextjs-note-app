@@ -4,7 +4,7 @@ import NoteLoading from './notes/NoteLoading';
 const HomePage = async () => {
   return (
     <>
-      <main>
+      <main className="flex-grow">
         <div>
           <Suspense fallback={<NoteLoading />}>
             <NoteCard />
