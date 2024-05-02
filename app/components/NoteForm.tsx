@@ -2,6 +2,8 @@
 import { FormEvent, useState } from 'react';
 import Link from 'next/link';
 import { createNote } from '../notes/components/CreateNote';
+import AlertError from './AlertError';
+import AlertSuccess from './AlertSuccess';
 
 interface Props {}
 
@@ -9,25 +11,33 @@ const NoteForm = () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [isNoteCreated, setIsNoteCreated] = useState(false);
+  const [error, setError] = useState(false);
+
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const data = { title, content };
-    createNote(data)
-      .then((newNote) => {
-        if (newNote) {
-          setTitle('');
-          setContent('');
-          setIsNoteCreated(true);
-        }
-      })
-      .catch((error) => {
-        console.error('Error creating note', error);
-      });
+    const success = createNote(data);
+    if (!success) setError(true);
+
+    setTitle('');
+    setContent('');
+    setIsNoteCreated(true);
+    setTimeout(() => {
+      setIsNoteCreated(false);
+    }, 3000);
+
+    if (error) {
+      setTimeout(() => {
+        setError(false);
+      }, 60);
+    }
   };
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
+      {isNoteCreated && <AlertSuccess message="Note Created successfully" />}
+      {error && <AlertError message="Error! Creating Note failed" />}
+      <form onSubmit={handleSubmit} className="my-2">
         <div className="w-auto">
           <input
             type="text"
@@ -38,7 +48,7 @@ const NoteForm = () => {
         </div>
         <div>
           <textarea
-            className="textarea textarea-bordered mx-5 mt-1.5 w-11/12 max-w-3xl pb-20"
+            className="textarea textarea-bordered mx-5 mt-3.5 w-11/12 pb-20"
             placeholder="Content"
             onChange={(e) => setContent(e.target.value)}
           ></textarea>
@@ -51,7 +61,6 @@ const NoteForm = () => {
             Add Note
           </button>
         </div>
-        {isNoteCreated && <p>Note Created successfully</p>}
       </form>
     </div>
   );

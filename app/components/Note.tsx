@@ -23,13 +23,15 @@ const Note = () => {
     };
 
     const addNote = async (newNote: Note) => {
-      const res = await fetch('http://localhost:5000/notes', {
+      const res = await fetch('http://localhost:3000/api/notes', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(newNote),
       });
+
+      console.log(res);
       return;
     };
   };
